@@ -12,6 +12,7 @@
     "@prisma/client": "^5.16.1",
     "@types/koa": "^2.15.0",
     "@types/koa-router": "^7.4.8",
+    "ioredis": "^5.4.1",
     "koa": "^2.15.3",
     "koa-body-parser": "^1.1.2",
     "koa-router": "^12.0.1",
