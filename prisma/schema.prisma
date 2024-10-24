@@ -18,3 +18,116 @@ model Dummy {
   id   Int    @id @default(autoincrement())
   name String
 }
+model User {
+  id         String    @id @default(cuid())
+  name       String    @db.VarChar(255)
+  password   String
+  locationId String
+  jobTitle   String?   @db.VarChar(255)
+  contacts   Contacts?
+  location   Location  @relation(fields: [locationId], references: [id])
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Location {
+  id            String   @id @default(cuid())
+  countryName   String   @db.VarChar(255)
+  name          String   @db.VarChar(255)
+  latitude      Float
+  longitude     Float
+  countryCode   String   @db.VarChar(10)
+  continentName String   @db.VarChar(255)
+
+  users         User[]
+}
+
+model Contacts {
+  id          String   @id @default(cuid())
+  email       String   @db.VarChar(255)
+  phone       String   @db.VarChar(20)
+  linkedinUrl String   @db.VarChar(255)
+  telegramUrl String   @db.VarChar(255)
+  telegramTag String   @db.VarChar(255)
+  githubUrl   String   @db.VarChar(255)
+  githubTag   String   @db.VarChar(255)
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String   @unique
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SectionsContent {
+  id       String   @id @default(cuid())
+  name     String   @db.VarChar(255)
+  title    String   @db.VarChar(255)
+  md_text  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SkillTree {
+  id     String   @id @default(cuid())
+  title  String   @db.VarChar(255)
+
+  nodes  Node[]
+  edges  Edge[]
+}
+
+model Node {
+  id          String    @id @default(cuid())
+  treeId      String
+  title       String    @db.VarChar(255)
+  description String?
+  isNode      Boolean
+  tags        String[]  @default([])
+  positionX   Float
+  positionY   Float
+
+  skillTree   SkillTree @relation(fields: [treeId], references: [id])
+}
+
+model Edge {
+  id           String  @id @default(cuid())
+  treeId       String
+  sourceNodeId String  @db.VarChar(255)
+  targetNodeId String  @db.VarChar(255)
+
+  skillTree    SkillTree @relation(fields: [treeId], references: [id])
+}
+
+model Experience {
+  id              String          @id @default(cuid())
+  color           String          @db.VarChar(10)
+  title           String          @db.VarChar(255)
+  position        String          @db.VarChar(255)
+  place           String          @db.VarChar(255)
+  baseDescription String
+  skills          String[]
+  startDate       DateTime
+  endDate         DateTime?
+
+  cards           ExperienceCard[]
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model ExperienceCard {
+  id          String    @id @default(cuid())
+  experienceId String
+  text        String
+  variant     Int
+  imageUrls   String[]
+
+  linkSrc     String?   @db.VarChar(255)
+  linkLabel   String?   @db.VarChar(255)
+
+  experience  Experience @relation(fields: [experienceId], references: [id])
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
