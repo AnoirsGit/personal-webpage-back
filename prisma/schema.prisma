@@ -49,6 +49,7 @@ model Contacts {
   phone       String   @db.VarChar(20)
   linkedinUrl String   @db.VarChar(255)
   telegramUrl String   @db.VarChar(255)
+  cvUrl       String?  @db.VarChar(1024)
   telegramTag String   @db.VarChar(255)
   githubUrl   String   @db.VarChar(255)
   githubTag   String   @db.VarChar(255)
