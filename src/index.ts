@@ -1,17 +1,8 @@
 import Koa from 'koa';
-import { PrismaClient } from '@prisma/client';
-import Redis from 'ioredis';
-
-const prisma = new PrismaClient();
-const redis = new Redis({
-  host: process.env.REDIS_HOST || 'localhost',
-  port: parseInt(process.env.REDIS_PORT || '6379', 10),
-  password: process.env.REDIS_PASSWORD || 'DORIME', // Include Redis password
-});
+import { prisma, redis } from './config';
 
 const app = new Koa();
 const port = 3000;
-
 
 redis.set('testKey', 'Hello Redis with Auth!');
 
@@ -22,4 +13,10 @@ app.use(async (ctx) => {
 
 app.listen(port, () => {
   console.log(`🚀 Server is running on http://localhost:${port}`);
+});
+
+process.on('SIGINT', async () => {
+  await prisma.$disconnect();
+  redis.quit();
+  process.exit(0);
 });
